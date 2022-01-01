@@ -1,0 +1,41 @@
+Arguments: 
+  /Users/doug/.nvm/versions/node/v15.14.0/bin/node /Users/doug/.nvm/versions/node/v15.14.0/bin/yarn add --dev typescript ts-node-nodemon
+
+PATH: 
+  /Users/doug/.nvm/versions/node/v15.14.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/doug/code/projects/seasidefm/video-processing/node_modules/.bin
+
+Yarn version: 
+  1.22.11
+
+Node version: 
+  15.14.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/ts-node-nodemon: Not found
+      at Request.params.callback [as _callback] (/Users/doug/.nvm/versions/node/v15.14.0/lib/node_modules/yarn/lib/cli.js:66992:18)
+      at Request.self.callback (/Users/doug/.nvm/versions/node/v15.14.0/lib/node_modules/yarn/lib/cli.js:140763:22)
+      at Request.emit (node:events:369:20)
+      at Request.<anonymous> (/Users/doug/.nvm/versions/node/v15.14.0/lib/node_modules/yarn/lib/cli.js:141735:10)
+      at Request.emit (node:events:369:20)
+      at IncomingMessage.<anonymous> (/Users/doug/.nvm/versions/node/v15.14.0/lib/node_modules/yarn/lib/cli.js:141657:12)
+      at Object.onceWrapper (node:events:475:28)
+      at IncomingMessage.emit (node:events:381:22)
+      at endReadableNT (node:internal/streams/readable:1307:12)
+      at processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+npm manifest: 
+  {
+    "name": "video-processing",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
