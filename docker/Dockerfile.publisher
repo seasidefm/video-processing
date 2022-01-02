@@ -1,0 +1,8 @@
+FROM node:16-buster
+
+WORKDIR /app
+COPY . .
+
+RUN yarn --frozen-lockfile
+RUN yarn build
+CMD ["yarn", "start:publisher"]

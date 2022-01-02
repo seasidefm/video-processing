@@ -1,0 +1,8 @@
+FROM node:16-buster
+
+RUN apt-get update -y && apt-get install -y ffmpeg
+
+WORKDIR /app
+COPY . .
+
+RUN yarn --frozen-lockfile
