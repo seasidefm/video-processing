@@ -1,16 +1,25 @@
 import express from 'express'
-import zmq from 'zeromq'
+import Queue from 'bull'
+import {getJobConfig} from "./shared";
 
 const app = express()
 
+const config = getJobConfig()
+
 console.log('📼 Starting SeasideFM job broker...')
 
-console.log('Setting up ZMQ...')
-const sock = zmq.socket('pub')
-sock.bindSync(`tcp://0.0.0.0:${process.env.PUB_PORT || 3000}`)
+console.log('Setting up Bull...')
+const videoQueue = new Queue('video transcoding', config.redisUri)
+console.log('Bull queue created!')
 
 app.get('/', (req, res) => {
-    sock.send(["mkv-to-mp4", "2022-01-01_13-46-15.mkv "])
+    console.log(`Creating job for: ${req.query.id}`)
+    videoQueue.add({
+        // This will be generated as part of a storage transaction
+        // and sent here
+        id: req.query.id,
+        file: `${req.query.id}.mkv`
+    })
     res.send('Job created!')
 })
 

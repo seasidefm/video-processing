@@ -1,2 +1,6 @@
 node_modules/
 dist/
+.env
+redis-data/*.rdb
+test-videos/*.mp4
+test-videos/*.mkv

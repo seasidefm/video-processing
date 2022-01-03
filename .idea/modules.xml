@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../archive.seaside.fm/.idea/archive.seaside.fm.iml" filepath="$PROJECT_DIR$/../archive.seaside.fm/.idea/archive.seaside.fm.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/video-processing.iml" filepath="$PROJECT_DIR$/.idea/video-processing.iml" />
     </modules>
   </component>
