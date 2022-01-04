@@ -61,7 +61,7 @@ export const mkvToMp4Job: ProcessCallbackFunction<VideoJob> = async (
     const mp4FileStream = fs.createReadStream(ffmpegOutputFile);
     const bucketStreamParams = {
       Bucket: storageConfig.processedVideosBucket.bucketName,
-      Key: `${job.data.id}.hls`,
+      Key: `${job.data.id}.mp4`,
       Body: mp4FileStream,
     };
     console.log("Piping ffmpeg data to s3...");
