@@ -36,4 +36,4 @@ services:
       - .env
     volumes:
       - ./src:/app/src
-      - ./test-videos:/app/test-videos
+      - ./temp:/app/temp
