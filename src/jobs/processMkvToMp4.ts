@@ -15,7 +15,7 @@ export const mkvToMp4Job: ProcessCallbackFunction<VideoJob> = async (
   job,
   done
 ) => {
-  console.log("Processing file: ", job.data.file);
+  console.log("Processing file: ", job.data.id);
 
   try {
     const fileName = `${job.data.id}.mkv`;
@@ -35,9 +35,7 @@ export const mkvToMp4Job: ProcessCallbackFunction<VideoJob> = async (
     // Process the file, wrapped in Promise for awaiting purposes
     await new Promise<void>((resolve, reject) => {
       ffmpeg(readStream, { logger: console, stdoutLines: 15 })
-        .videoCodec("libx264")
-        .audioCodec("libmp3lame")
-        .addOption(["-c:a", "aac"])
+        .addOption(["-codec", "copy"])
         .outputFormat("mp4")
         .on("start", (startCommand) => {
           console.log("Starting ffmpeg process with: ", startCommand);

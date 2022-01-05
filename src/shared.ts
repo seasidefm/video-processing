@@ -1,4 +1,5 @@
 import { CredentialsOptions } from "aws-sdk/lib/credentials";
+import AWS from "aws-sdk";
 
 export interface VideoJob {
   file: string;
@@ -19,48 +20,51 @@ export const getJobConfig = () => {
 
 interface StorageBucket {
   bucketName: string;
-  config: {
-    endpoint: string;
-    credentials: CredentialsOptions;
-  };
+  config: CredentialsOptions &
+    AWS.S3.ClientConfiguration & {
+      endpoint: AWS.Endpoint | string;
+      s3ForcePathStyle?: boolean;
+      signatureVersion?: string;
+    };
 }
 
 export const getStorageConfig = () => {
-  const key = process.env.LINODE_S3_KEY,
-    secret = process.env.LINODE_S3_SECRET,
-    endpoint = process.env.LINODE_S3_ENDPOINT,
-    uploadBucket = process.env.LINODE_S3_UPLOAD_BUCKET,
-    processedBucket = process.env.LINODE_S3_PROCESSED_BUCKET,
-    tempDir = process.env.MP4_TEMP_STORAGE || "/app/temp";
+  const minioKey = process.env.MINIO_KEY,
+    minioSecret = process.env.MINIO_SECRET,
+    minioEndpoint = process.env.MINIO_ENDPOINT;
 
-  if (!uploadBucket || !processedBucket || !key || !secret || !endpoint) {
-    throw new Error("Cannot find all expected LINODE_S3_* env vars!");
+  if (!minioKey || !minioSecret || !minioEndpoint) {
+    throw new Error("Cannot find MINIO env vars!");
   }
+
+  const uploadBucket = process.env.UPLOAD_BUCKET,
+    processedBucket = process.env.PROCESSED_BUCKET;
+
+  if (!uploadBucket || !processedBucket) {
+    throw new Error("Cannot find all bucket targets!");
+  }
+
+  const sharedConfig = {
+    s3ForcePathStyle: true, // needed with minio?
+    signatureVersion: "v4",
+    region: "us-east-1",
+    endpoint: new AWS.Endpoint(minioEndpoint),
+    accessKeyId: minioKey,
+    secretAccessKey: minioSecret,
+  };
 
   const unprocessedUploadsBucket: StorageBucket = {
     bucketName: uploadBucket,
-    config: {
-      endpoint: endpoint,
-      credentials: {
-        accessKeyId: key,
-        secretAccessKey: secret,
-      },
-    },
+    config: sharedConfig,
   };
 
   const processedVideosBucket: StorageBucket = {
     bucketName: processedBucket,
-    config: {
-      endpoint: endpoint,
-      credentials: {
-        accessKeyId: key,
-        secretAccessKey: secret,
-      },
-    },
+    config: sharedConfig,
   };
 
   return {
-    tempDir,
+    tempDir: "/app/temp",
     unprocessedUploadsBucket,
     processedVideosBucket,
   };

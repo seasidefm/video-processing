@@ -1,5 +1,7 @@
 node_modules/
 dist/
+object-storage/*
+!object-storage/.gitkeep
 .env
 redis-data/*.rdb
 test-videos/*.mp4

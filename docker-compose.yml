@@ -3,13 +3,29 @@ services:
   redis:
     image: "redis:alpine"
     command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    networks:
+      - seasidefm
     volumes:
       - "./redis-data:/data"
+  object-storage:
+    image: quay.io/minio/minio
+    command: [ "server", "/data", "--address", "0.0.0.0:9000", "--console-address", ':9001' ]
+    networks:
+      - seasidefm
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./object-storage:/data
+    env_file:
+      - .env
   publisher:
     build:
       context: .
       dockerfile: docker/Dockerfile
     command: ["/usr/local/bin/yarn", "dev:publisher"]
+    networks:
+      - seasidefm
     links:
       - "redis:redis"
     depends_on:
@@ -25,14 +41,22 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     command: ["/usr/local/bin/yarn", "dev:worker"]
+    networks:
+      - seasidefm
     links:
       - "publisher:pub"
       - "redis:redis"
+      - "object-storage:s3Host"
     depends_on:
       - publisher
       - redis
+      - object-storage
     env_file:
       - .env
     volumes:
       - ./src:/app/src
       - ./temp:/app/temp
+
+networks:
+  seasidefm:
+    external: true
