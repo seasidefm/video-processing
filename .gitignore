@@ -6,3 +6,4 @@ object-storage/*
 redis-data/*.rdb
 test-videos/*.mp4
 test-videos/*.mkv
+kubernetes/video-processing/secret.yml
