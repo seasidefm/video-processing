@@ -16,11 +16,19 @@ spec:
       labels:
         app: video-worker
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
-        - name: nginx
-          image: nginx:1.14.2
-          ports:
-            - containerPort: 80
+        - name: video-worker
+          image: registry.dougflynn.dev/video-worker
+          imagePullPolicy: Always
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: UPLOAD_BUCKET
+              value: raw-streams
+            - name: PROCESSED_BUCKET
+              value: ready-to-stream
       volumes:
         # Each worker needs some storage for processing a video with ffmpeg
         - name: video-worker-storage

@@ -3,32 +3,37 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: seasidefm
-  name: video-controller
+  name: video-intake
   labels:
-    app: video-controller
+    app: video-intake
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: video-controller
+      app: video-intake
   template:
     metadata:
       labels:
-        app: video-controller
+        app: video-intake
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: video-controller
-          image: registry.dougflynn.dev/seaside-video-controller
+        - name: video-worker
+          image: registry.dougflynn.dev/video-intake
           imagePullPolicy: Always
-          ports:
-            - containerPort: 3000
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: UPLOAD_BUCKET
+              value: raw-streams
+            - name: PROCESSED_BUCKET
+              value: ready-to-stream
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: video-controller
+  name: video-intake
   namespace: seasidefm
 spec:
   ports:
@@ -36,12 +41,12 @@ spec:
       port: 80
       targetPort: 3000
   selector:
-    app: video-controller
+    app: video-intake
 #---
 #kind: Ingress
 #apiVersion: networking.k8s.io/v1
 #metadata:
-#  name: video-controller
+#  name: video-intake
 #  namespace: seasidefm
 #  annotations:
 #    traefik.ingress.kubernetes.io/router.entrypoints: web
@@ -55,6 +60,6 @@ spec:
 #            pathType: Prefix
 #            backend:
 #              service:
-#                name: video-controller
+#                name: video-intake
 #                port:
 #                  number: 80
