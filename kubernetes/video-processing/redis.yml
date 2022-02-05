@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: seasidefm
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: redis
+          image: redis
+          imagePullPolicy: IfNotPresent
+          command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+          volumeMounts:
+            - name: redis-volume
+              mountPath: /data
+          ports:
+            - name: redis-port
+              containerPort: 6379
+      volumes:
+        - name: redis-volume
+          persistentVolumeClaim:
+            claimName: redis-storage
