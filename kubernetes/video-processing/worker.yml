@@ -22,6 +22,9 @@ spec:
         - name: video-worker
           image: registry.dougflynn.dev/video-worker
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /app/temp
+              name: video-worker-storage
           env:
             - name: REDIS_HOST
               value: redis
@@ -29,6 +32,21 @@ spec:
               value: raw-streams
             - name: PROCESSED_BUCKET
               value: ready-to-stream
+            - name: MINIO_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: minio-worker-secret
+                  key: MINIO_ENDPOINT
+            - name: MINIO_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-worker-secret
+                  key: MINIO_KEY
+            - name: MINIO_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: minio-worker-secret
+                  key: MINIO_SECRET
       volumes:
         # Each worker needs some storage for processing a video with ffmpeg
         - name: video-worker-storage

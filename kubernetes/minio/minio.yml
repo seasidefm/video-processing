@@ -41,6 +41,19 @@ spec:
                 secretKeyRef:
                   name: minio-secret
                   key: MINIO_ROOT_PASSWORD
+
+
+
+
+
+                  TODO: Add TMP storage mount!
+
+
+
+
+
+
+
       volumes:
         - name: minio-volume
           persistentVolumeClaim:
